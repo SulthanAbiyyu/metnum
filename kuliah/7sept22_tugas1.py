@@ -29,7 +29,7 @@ def nomor_dua(x, degree):
 if __name__ == "__main__":
     true_value_1 = math.cos(5)
     true_value_2 = math.sin(5)
-    degree = 10
+    degree = 100
 
     # Nomor 1
     un_1, pred_value_1 = nomor_satu(5, degree)
