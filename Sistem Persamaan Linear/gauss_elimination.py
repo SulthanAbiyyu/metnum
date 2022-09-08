@@ -13,6 +13,8 @@ def naive_gauss_elimination(A, b, n) -> np.ndarray:
             b[i] = b[i] - m * b[k]  # untuk vektor b (yang dikanan sama dengan)
 
     return A, b
+    # Yang menjadi masalah adalah ketika pivotnya itu 0, karena kalo pivotnya 0,
+    # maka akan terjadi pembagian dengan 0 ketika mencari m
 
 
 if __name__ == "__main__":
@@ -29,5 +31,3 @@ if __name__ == "__main__":
     A_segitiga, b_baru = naive_gauss_elimination(A, b, N)
     print(penyulihan_mundur(A_segitiga, b_baru, N, x))
 
-    # Yang menjadi masalah adalah ketika pivotnya itu 0, karena kalo pivotnya 0,
-    # maka akan terjadi pembagian dengan 0 ketika mencari m
