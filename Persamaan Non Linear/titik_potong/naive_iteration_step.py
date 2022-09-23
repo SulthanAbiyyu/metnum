@@ -1,12 +1,12 @@
 import numpy as np
 
 
-def naive_iteration_step(f, g, x0, tol=0.1, max_iter=1000, step=0.1, patience=10):
+def naive_iteration_step(f, g, x0, tol=0.1, max_iter=1000, step=1e-3, patience=10):
     xi = x0
     not_updated = 0
     for i in range(max_iter):
         if not_updated > patience:
-            return "Wrong initialization"
+            return "rage quit!!"
 
         if abs(abs(f(xi)) - abs(g(xi))) < tol:
             return xi
