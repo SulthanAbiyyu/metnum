@@ -1,20 +1,27 @@
+from cProfile import label
 import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 def naive_iteration_step(f, g, x0, tol=0.1, max_iter=1000, step=1e-3, patience=10):
     xi = x0
+    x0s = []
+    x0s.append(xi)
     not_updated = 0
     for i in range(max_iter):
         if not_updated > patience:
-            return "rage quit!!"
+            return "rage quit!!", x0s
 
         if abs(abs(f(xi)) - abs(g(xi))) < tol:
-            return xi
+            return xi, x0s
         else:
             if abs(max(f(xi), g(xi)) - min(f(xi), g(xi))) > abs(max(f(xi + step), g(xi + step)) - min(f(xi + step), g(xi + step))):
                 xi += step
+                x0s.append(xi)
             elif abs(max(f(xi), g(xi)) - min(f(xi), g(xi))) > abs(max(f(xi - step), g(xi - step)) - min(f(xi - step), g(xi - step))):
                 xi -= step
+                x0s.append(xi)
             else:
                 print(f"plateau ke {i+1}")
                 not_updated += 1
@@ -29,7 +36,7 @@ def naive_iteration_step(f, g, x0, tol=0.1, max_iter=1000, step=1e-3, patience=1
                 # Step down point : {abs(max(f(xi - step), g(xi - step)) - min(f(xi - step), g(xi - step)))}
                 # """)
     if abs(abs(f(xi)) - abs(g(xi))) > tol:
-        return "not solved"
+        return "not solved", x0s
 
 
 def biyu_initialization(f, g, mode="random", range=(-10, 10), tries=10):
@@ -65,12 +72,28 @@ if __name__ == "__main__":
     def f(x): return ((x ** 2) / 2) + x - 2
     def g(x): return x ** 3
 
+    x = np.linspace(-10, 10)
+    fx = f(x)
+    gx = g(x)
+
     x0 = biyu_initialization(f, g, mode="linspace")
-    x_tipot = naive_iteration_step(f, g, x0, step=1e-3)
+    x_tipot, x0s = naive_iteration_step(f, g, x0, step=1e-3, tol=1e-2)
     print(x0)
     print(x_tipot)
-    # print(
-    #     f"x0 = {x0} \t x_tipot = {x_tipot} \nf(x) = {f(x_tipot)} \t g(x) = {g(x_tipot)}")
+
+    x0s = np.array(x0s)
+    fx0s = f(x0s)
+    gx0s = g(x0s)
+
+    sns.lineplot(x=x, y=fx, label="f(x)")
+    sns.scatterplot(x=x0s, y=fx0s, label="f(x0s)")
+    sns.scatterplot(x=x0s, y=gx0s, label="g(x0s)")
+    sns.lineplot(x=x, y=gx, label="g(x)")
+    plt.grid(True)
+    plt.xlim([-2, 0])
+    plt.ylim([-3, -2])
+    plt.legend()
+    plt.show()
 
     # # experiment
     # divirgent = 0
