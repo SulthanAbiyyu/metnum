@@ -4,13 +4,13 @@ import numpy as np
 def naive_iteration_step(f, g, x0, tol=0.1, max_iter=1000, step=0.1, patience=10):
     xi = x0
     not_updated = 0
-    for i in range(max_iter):
+    for _ in range(max_iter):
         if not_updated > patience:
-            print("Wrong initialization")
-            break
+            # print("Wrong initialization")
+            return -1
 
         if abs(f(xi) - g(xi)) < tol:
-            break
+            return xi
         else:
             if abs(max(f(xi), g(xi)) - min(f(xi), g(xi))) > abs(max(f(xi + step), g(xi + step)) - min(f(xi + step), g(xi + step))):
                 xi += step
@@ -28,8 +28,8 @@ def naive_iteration_step(f, g, x0, tol=0.1, max_iter=1000, step=0.1, patience=10
                 # Step up point   : {abs(max(f(xi + step), g(xi + step)) - min(f(xi + step), g(xi + step)))}
                 # Step down point : {abs(max(f(xi - step), g(xi - step)) - min(f(xi - step), g(xi - step)))}
                 # """)
-
-    return xi
+    if abs(f(xi) - g(xi)) > tol:
+        return -2
 
 
 def biyu_initialization(f, g, tries=3, range=(-10, 10)):
@@ -52,9 +52,19 @@ if __name__ == "__main__":
     def f(x): return x ** 2 - 1
     def g(x): return x ** 3
 
-    np.random.seed(22)
-    x0 = biyu_initialization(f, g, tries=10)
-    x_tipot = naive_iteration_step(f, g, x0, max_iter=1_000, step=1e-3)
+    # experiment
+    divirgent = 0
+    not_solved = 0
+    for i in range(100):
+        x0 = biyu_initialization(f, g, tries=10)
+        x_tipot = naive_iteration_step(f, g, x0, max_iter=1_000, step=3e-4)
+        # print(
+        #     f"x0 = {x0} \t x_tipot = {x_tipot: .3f} \nf(x) = {f(x_tipot): .3f} \t g(x) = {g(x_tipot): .3f}")
 
-    print(
-        f"x0 = {x0} \t\t x_tipot = {x_tipot: .3f} \nf(x) = {f(x_tipot): .3f} \t g(x) = {g(x_tipot): .3f}")
+        if x_tipot == -1:
+            divirgent += 1
+        elif x_tipot == -2:
+            not_solved += 1
+
+    print(f"divirgent rate: {divirgent / 100}")
+    print(f"Not solved rate: {not_solved / 100}")
