@@ -1,7 +1,6 @@
-from cProfile import label
 import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
+# import matplotlib.pyplot as plt
+# import seaborn as sns
 
 
 def naive_iteration_step(f, g, x0, tol=0.1, max_iter=1000, step=1e-3, patience=10):
@@ -13,14 +12,21 @@ def naive_iteration_step(f, g, x0, tol=0.1, max_iter=1000, step=1e-3, patience=1
         if not_updated > patience:
             return "rage quit!!", x0s
 
-        if abs(abs(f(xi)) - abs(g(xi))) < tol:
+        if abs(f(xi) - g(xi)) < tol:
             return xi, x0s
         else:
+            # print(
+            # f"Initial point   : {abs(max(f(xi), g(xi)) - min(f(xi), g(xi)))}")
+            # print(
+            # f"Step up point   : {abs(max(f(xi + step), g(xi + step)) - min(f(xi + step), g(xi + step)))}")
+            # print(f"xi: {xi} \n xi+step: {xi+step}")
             if abs(max(f(xi), g(xi)) - min(f(xi), g(xi))) > abs(max(f(xi + step), g(xi + step)) - min(f(xi + step), g(xi + step))):
                 xi += step
+                # print("maju")
                 x0s.append(xi)
             elif abs(max(f(xi), g(xi)) - min(f(xi), g(xi))) > abs(max(f(xi - step), g(xi - step)) - min(f(xi - step), g(xi - step))):
                 xi -= step
+                # print("mundur")
                 x0s.append(xi)
             else:
                 print(f"plateau ke {i+1}")
@@ -35,7 +41,7 @@ def naive_iteration_step(f, g, x0, tol=0.1, max_iter=1000, step=1e-3, patience=1
                 # Step up point   : {abs(max(f(xi + step), g(xi + step)) - min(f(xi + step), g(xi + step)))}
                 # Step down point : {abs(max(f(xi - step), g(xi - step)) - min(f(xi - step), g(xi - step)))}
                 # """)
-    if abs(abs(f(xi)) - abs(g(xi))) > tol:
+    if abs(f(xi) - g(xi)) > tol:
         return "not solved", x0s
 
 
@@ -48,12 +54,15 @@ def biyu_initialization(f, g, mode="random", range=(-10, 10), tries=10):
     elif mode == "arange":
         x = np.arange(range[0], range[1])
 
-    closest_point = [0, 9999]  # index, min_val
+    closest_point = [0, 0]  # index, min_val
     for idx, xi in enumerate(x):
 
         y_max = max(f(xi), g(xi))
         y_min = min(f(xi), g(xi))
         length = abs(y_max - y_min)
+
+        if idx == 0:
+            closest_point[1] = length
 
         if length < closest_point[1]:
             closest_point[0] = idx
@@ -69,33 +78,49 @@ if __name__ == "__main__":
     # def f(x): return x ** 2
     # def g(x): return x ** 3
 
-    def f(x): return ((x ** 2) / 2) + x - 2
-    def g(x): return x ** 3
+    # # Polinomial tests
 
-    x = np.linspace(-10, 10)
-    fx = f(x)
-    gx = g(x)
+    def f(x): return x ** 4 + 2 * x ** 3 - 2 * x ** 2 - x - 2
+    def g(x): return x
 
     x0 = biyu_initialization(f, g, mode="linspace")
-    x_tipot, x0s = naive_iteration_step(f, g, x0, step=1e-3, tol=1e-2)
+    x_tipot, _ = naive_iteration_step(f, g, 1, max_iter=1000, tol=0.01)
     print(x0)
     print(x_tipot)
+    print(f(x_tipot))
 
-    x0s = np.array(x0s)
-    fx0s = f(x0s)
-    gx0s = g(x0s)
+    # linspace mode [-10, 10] failed because of little bump in the middle
 
-    sns.lineplot(x=x, y=fx, label="f(x)")
-    sns.scatterplot(x=x0s, y=fx0s, label="f(x0s)")
-    sns.scatterplot(x=x0s, y=gx0s, label="g(x0s)")
-    sns.lineplot(x=x, y=gx, label="g(x)")
-    plt.grid(True)
-    plt.xlim([-2, 0])
-    plt.ylim([-3, -2])
-    plt.legend()
-    plt.show()
+    # # Visualisasi
 
-    # # experiment
+    # def f(x): return ((x ** 2) / 2) + x - 2
+    # def g(x): return x ** 3
+
+    # x = np.linspace(-10, 10)
+    # fx = f(x)
+    # gx = g(x)
+
+    # x0 = biyu_initialization(f, g, mode="linspace")
+    # x_tipot, x0s = naive_iteration_step(f, g, x0, step=1e-3, tol=1e-2)
+    # print(x0)
+    # print(x_tipot)
+
+    # x0s = np.array(x0s)
+    # fx0s = f(x0s)
+    # gx0s = g(x0s)
+
+    # sns.lineplot(x=x, y=fx, label="f(x)")
+    # sns.scatterplot(x=x0s, y=fx0s, label="f(x0s)")
+    # sns.scatterplot(x=x0s, y=gx0s, label="g(x0s)")
+    # sns.lineplot(x=x, y=gx, label="g(x)")
+    # plt.grid(True)
+    # plt.xlim([-2, 0])
+    # plt.ylim([-3, -2])
+    # plt.legend()
+    # plt.show()
+
+    # # Experiment
+
     # divirgent = 0
     # not_solved = 0
 
