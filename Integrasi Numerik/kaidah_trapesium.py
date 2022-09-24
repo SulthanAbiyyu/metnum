@@ -1,3 +1,6 @@
+from math import sin, sqrt, exp
+
+
 def kaidah_trapesium(f, a, b, n):
     """
     Args
@@ -20,5 +23,5 @@ def kaidah_trapesium(f, a, b, n):
 
 
 if __name__ == "__main__":
-    def f(x): return x ** 2 + 1
-    print(kaidah_trapesium(f, 0, 2, 10))
+    def f(x): return (sin(sqrt(x)+2) * exp(sqrt(x)))
+    print(kaidah_trapesium(f, 0, 2, 100))
