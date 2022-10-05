@@ -8,7 +8,7 @@ def bisection(fx, a, b):
             c = (a + b) / 2
             if fx(a) * fx(c) < 0:
                 b = c
-            elif fx(a) * fx(c) > 0:
+            elif fx(c) * fx(b) < 0:
                 a = c
         return c
     else:
