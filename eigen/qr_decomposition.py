@@ -31,22 +31,23 @@ def qr_eigen_iteration(A, n_iter=100, normalized=True):
     A_baru = np.zeros(A.shape)
     for _ in range(n_iter):
         A_baru = R @ Q
+        print(f"{_+1} \n\nQ : {Q} \n\n R: {R} \n\n A: {A_baru}")
         Q, R = qr_decompose(A_baru)
 
     return A_baru.diagonal()
 
 
 if __name__ == "__main__":
-    # A = np.array([
-    #     [2, 1, 2],
-    #     [1, 3, 4],
-    #     [2, 2, 1]
-    # ])
     A = np.array([
-        [5, -2],
-        [7, -4]
+        [2, 1, 2],
+        [1, 3, 4],
+        [2, 2, 1]
     ])
+    # A = np.array([
+    #     [5, -2],
+    #     [7, -4]
+    # ])
     # q, r = qr_decompose(A)
     # print(q)
     # print(r)
-    print(qr_eigen_iteration(A))
+    print(qr_eigen_iteration(A, 3))
