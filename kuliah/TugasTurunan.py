@@ -21,4 +21,4 @@ if __name__ == "__main__":
         print(f"Menggunakan Metode {nama}")
         for k in range(5):
             h = 10 ** -k
-            print(f"h: {h}\t\t|\t\thasil: {m(f, x0, h)}")
+            print("h: {:<20f}|\thasil: {:<20f}".format(h, m(f, x0, h)))
