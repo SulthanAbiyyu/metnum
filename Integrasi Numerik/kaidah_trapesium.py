@@ -1,4 +1,4 @@
-from math import sin, sqrt, exp
+from math import sin, pi
 
 
 def kaidah_trapesium(f, a, b, n):
@@ -23,5 +23,6 @@ def kaidah_trapesium(f, a, b, n):
 
 
 if __name__ == "__main__":
-    def f(x): return (sin(sqrt(x)+2) * exp(sqrt(x)))
-    print(kaidah_trapesium(f, 0, 2, 100))
+    # def f(x): return (sin(sqrt(x)+2) * exp(sqrt(x)))
+    def f(x): return sin(x ** 2)
+    print(kaidah_trapesium(f, 0, pi, 100))
