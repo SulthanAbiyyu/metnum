@@ -1,22 +1,22 @@
-import torch
+import numpy as np
 
 
-def newton_optimization(fx: torch.tensor, x0: torch.tensor, n_iter: int = 1):
+def newton_optimization(fx, x0, n_iter: int = 1):
 
+    def diff(f, x, h=0.0001):
+        return (8 * f(x + h) - 8 * f(x - h) - (f(x + 2*h) - f(x - 2*h))) / (12 * h)
+
+    def second_diff(f, x, h=0.0001):
+        return 1/h**2 * (f(x-h) - 2*f(x) + f(x+h))
     for _ in range(n_iter):
-        fx.backward(create_graph=True)
-        first = x0.grad.clone()
-        x0.grad.data.zero_()
-        x0.grad.backward()
-        second = x0.grad.clone()
-
-        x0 = x0 - (first / second)
+        x0 = x0 - (diff(fx, x0) / second_diff(fx, x0))
 
     return x0
 
 
 if __name__ == "__main__":
-    x = torch.tensor(2.5, requires_grad=True)
-    g = 2 * torch.sin(x) - (x ** 2 / 10)
+    x = 2.5
 
-    newton_optimization(g, x, n_iter=1)
+    def g(x): return 2 * np.sin(x) - (x ** 2 / 10)
+
+    print(newton_optimization(g, x, n_iter=4))
