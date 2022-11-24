@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def newton_optimization(fx, x0, n_iter: int = 1):
+def newton_optimization(fx, x0, n_iter: int = 10):
 
     def diff(f, x, h=0.0001):
         return (8 * f(x + h) - 8 * f(x - h) - (f(x + 2*h) - f(x - 2*h))) / (12 * h)
